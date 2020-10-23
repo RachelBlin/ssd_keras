@@ -531,7 +531,6 @@ class Evaluator:
                     num_gt_per_class[class_id] += 1
 
         self.num_gt_per_class = num_gt_per_class
-
         if ret:
             return num_gt_per_class
 
@@ -605,17 +604,20 @@ class Evaluator:
 
         # Iterate over all classes.
         for class_id in range(1, self.n_classes + 1):
+            print(class_id)
 
             predictions = self.prediction_results[class_id]
 
             # Store the matching results in these lists:
             true_pos = np.zeros(len(predictions), dtype=np.int) # 1 for every prediction that is a true positive, 0 otherwise
+            print(true_pos)
             false_pos = np.zeros(len(predictions), dtype=np.int) # 1 for every prediction that is a false positive, 0 otherwise
 
             # In case there are no predictions at all for this class, we're done here.
             if len(predictions) == 0:
                 print("No predictions for class {}/{}".format(class_id, self.n_classes))
                 true_positives.append(true_pos)
+                #true_positives.append(np.zeros(1))
                 false_positives.append(false_pos)
                 continue
 
@@ -730,6 +732,7 @@ class Evaluator:
         self.true_positives = true_positives
         self.false_positives = false_positives
         self.cumulative_true_positives = cumulative_true_positives
+        print(len(self.cumulative_true_positives))
         self.cumulative_false_positives = cumulative_false_positives
 
         if ret:
@@ -759,11 +762,11 @@ class Evaluator:
         cumulative_recalls = [[]]
 
         # Iterate over all classes.
-        for class_id in range(1, self.n_classes + 1):
-
+        #for class_id in range(1, self.n_classes + 1):
+        for class_id in range(1, self.n_classes+1):
             if verbose:
                 print("Computing precisions and recalls, class {}/{}".format(class_id, self.n_classes))
-
+            print(len(self.cumulative_true_positives))
             tp = self.cumulative_true_positives[class_id]
             fp = self.cumulative_false_positives[class_id]
 
@@ -822,6 +825,7 @@ class Evaluator:
 
             if verbose:
                 print("Computing average precision, class {}/{}".format(class_id, self.n_classes))
+
 
             cumulative_precision = self.cumulative_precisions[class_id]
             cumulative_recall = self.cumulative_recalls[class_id]
